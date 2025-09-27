@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 import { MoveLeft, MoveRight, Loader2 } from "lucide-react";
 import UserAvatar from "../components/items/UserAvatar";
-
+import DetailAlbum from "../components/popups/DetailAlbum";
 function Albums() {
+  const [albumID, setAlbumID] = useState(null);
+
   const [albums, setAlbums] = useState([]);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
   const maximunRows = 20;
-  const totalPages = Math.ceil(100 / maximunRows); // API có 100 album cố định
+  const totalPages = Math.ceil(100 / maximunRows);
 
   // Lấy danh sách users (1 lần duy nhất)
   useEffect(() => {
-    // giả sử thời gian chờ
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
-      .then((data) => setUsers(data))
+      .then((data) => {
+        setUsers(data);
+        sessionStorage.setItem("users", JSON.stringify(data));
+      })
       .catch((error) => console.error("Error fetching users:", error));
   }, []);
 
@@ -29,17 +33,28 @@ function Albums() {
   // Lấy albums theo trang
   useEffect(() => {
     const fetchAlbums = async () => {
+      const start = (currentPage - 1) * maximunRows;
+      const end = currentPage * maximunRows;
+
+      // Nếu đã có dữ liệu cho trang này thì không gọi API nữa
+      if (albums.slice(start, end).length === maximunRows) {
+        return;
+      }
+
       setLoading(true);
       try {
         const res = await fetch(
-          `https://jsonplaceholder.typicode.com/albums?_start=${
-            (currentPage - 1) * maximunRows
-          }&_limit=${maximunRows}`
+          `https://jsonplaceholder.typicode.com/albums?_start=${start}&_limit=${maximunRows}`
         );
         const data = await res.json();
-        // Lưu thêm vào chứ không ghi đè
-        setAlbums((prev) => [...prev, ...data]);
-        console.log("data", data);
+
+        // copy mảng albums hiện tại và chèn data vào đúng vị trí
+        setAlbums((prev) => {
+          const copy = [...prev];
+          copy.splice(start, data.length, ...data);
+          return copy;
+        });
+        sessionStorage.setItem("albums", JSON.stringify(albums));
       } catch (error) {
         console.error("Error fetching albums:", error);
       } finally {
@@ -64,8 +79,7 @@ function Albums() {
 
           <tbody className="text-gray-800">
             {loading
-              ? // Hiệu ứng preload (skeleton rows)
-                Array.from({ length: maximunRows }).map((_, idx) => (
+              ? Array.from({ length: maximunRows }).map((_, idx) => (
                   <tr
                     key={idx}
                     className="border-b border-gray-200 animate-pulse h-12"
@@ -87,8 +101,7 @@ function Albums() {
                     </td>
                   </tr>
                 ))
-              : // Chỉ hiển thị maximunRows số bản ghi
-                albums
+              : albums
                   .slice(
                     (currentPage - 1) * maximunRows,
                     currentPage * maximunRows
@@ -109,7 +122,12 @@ function Albums() {
                       </td>
                       <td className="px-4">
                         <div className="flex items-center justify-center h-full space-x-3">
-                          <button className="px-3 py-1 rounded-md bg-green-200 text-green-800 hover:bg-green-300">
+                          <button
+                            onClick={() => {
+                              setAlbumID(album.id);
+                            }}
+                            className="px-3 py-1 rounded-md bg-green-200 text-green-800 hover:bg-green-300"
+                          >
                             Show
                           </button>
                         </div>
@@ -126,11 +144,10 @@ function Albums() {
             className={`px-3 py-1 rounded-md flex items-center gap-1 ${
               currentPage === 1 || loading
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-green-200 text-green-800 hover:bg-green-300"
             }`}
           >
             <MoveLeft size={18} />
-            Prev
           </button>
 
           {loading ? (
@@ -147,14 +164,23 @@ function Albums() {
             className={`px-3 py-1 rounded-md flex items-center gap-1 ${
               currentPage === totalPages || loading
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-green-200 text-green-800 hover:bg-green-300"
             }`}
           >
-            Next
             <MoveRight size={18} />
           </button>
         </div>
       </div>
+
+      {/* Chi tiết album */}
+      {albumID && (
+        <DetailAlbum
+          albumID={albumID}
+          onClose={() => {
+            setAlbumID(null);
+          }}
+        />
+      )}
     </div>
   );
 }
