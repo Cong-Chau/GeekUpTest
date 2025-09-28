@@ -13,15 +13,19 @@ function Albums() {
   const maximunRows = 20;
   const totalPages = Math.ceil(100 / maximunRows);
 
-  // Lấy danh sách users (1 lần duy nhất)
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-        sessionStorage.setItem("users", JSON.stringify(data));
-      })
-      .catch((error) => console.error("Error fetching users:", error));
+    const storedUsers = sessionStorage.getItem("users");
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
+    } else {
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then((response) => response.json())
+        .then((data) => {
+          setUsers(data);
+          sessionStorage.setItem("users", JSON.stringify(data));
+        })
+        .catch((error) => console.error("Error fetching users:", error));
+    }
   }, []);
 
   // lấy userName từ userId
@@ -36,8 +40,9 @@ function Albums() {
       const start = (currentPage - 1) * maximunRows;
       const end = currentPage * maximunRows;
 
-      // Nếu đã có dữ liệu cho trang này thì không gọi API nữa
-      if (albums.slice(start, end).length === maximunRows) {
+      const storedAlbums = JSON.parse(sessionStorage.getItem("albums") || "[]");
+      if (storedAlbums.slice(start, end).length === maximunRows) {
+        setAlbums(storedAlbums);
         return;
       }
 
@@ -48,13 +53,12 @@ function Albums() {
         );
         const data = await res.json();
 
-        // copy mảng albums hiện tại và chèn data vào đúng vị trí
         setAlbums((prev) => {
           const copy = [...prev];
           copy.splice(start, data.length, ...data);
+          sessionStorage.setItem("albums", JSON.stringify(copy));
           return copy;
         });
-        sessionStorage.setItem("albums", JSON.stringify(albums));
       } catch (error) {
         console.error("Error fetching albums:", error);
       } finally {
@@ -67,6 +71,12 @@ function Albums() {
   return (
     <div className="bg-gray-200 w-full min-h-screen py-8">
       <div className="bg-white w-[94%] mx-auto rounded-md p-4 overflow-x-auto">
+        <div className="flex flex-col mb-4 gap-1">
+          <h1 className="font-bold text-2xl">Albums</h1>
+          <p className="text-gray-600">
+            Browse and manage photo albums from all users
+          </p>
+        </div>
         <table className="w-full rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
@@ -126,7 +136,7 @@ function Albums() {
                             onClick={() => {
                               setAlbumID(album.id);
                             }}
-                            className="px-3 py-1 rounded-md bg-green-200 text-green-800 hover:bg-green-300"
+                            className="px-3 py-1 rounded-md bg-green-200 text-green-800 hover:bg-green-300 hover:cursor-pointer"
                           >
                             Show
                           </button>
@@ -144,7 +154,7 @@ function Albums() {
             className={`px-3 py-1 rounded-md flex items-center gap-1 ${
               currentPage === 1 || loading
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-green-200 text-green-800 hover:bg-green-300"
+                : "bg-green-200 text-green-800 hover:bg-green-300 hover:cursor-pointer"
             }`}
           >
             <MoveLeft size={18} />
@@ -161,10 +171,10 @@ function Albums() {
           <button
             disabled={currentPage === totalPages || loading}
             onClick={() => setCurrentPage((prev) => prev + 1)}
-            className={`px-3 py-1 rounded-md flex items-center gap-1 ${
+            className={`px-3 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer ${
               currentPage === totalPages || loading
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-green-200 text-green-800 hover:bg-green-300"
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed "
+                : "bg-green-200 text-green-800 hover:bg-green-300 hover:cursor-pointer"
             }`}
           >
             <MoveRight size={18} />

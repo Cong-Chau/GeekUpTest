@@ -5,6 +5,7 @@ function DetailAlbum({ albumID = null, onClose }) {
   const [user, setUser] = useState(null);
   const [album, setAlbum] = useState(null);
   const [photos, setPhotos] = useState([]);
+  console.log(albumID);
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/albums/${albumID}`)
       .then((response) => response.json())
@@ -36,7 +37,7 @@ function DetailAlbum({ albumID = null, onClose }) {
       className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
     >
       <div
-        className="bg-white rounded-2xl shadow-lg p-6 w-2/3 "
+        className="bg-white rounded-2xl shadow-lg p-6 w-11/12 max-w-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-between items-center mb-4">
@@ -48,6 +49,7 @@ function DetailAlbum({ albumID = null, onClose }) {
             X
           </button>
         </div>
+
         {/* Thông tin user */}
         {user ? (
           <div className="flex flex-row items-center gap-2">
@@ -66,7 +68,7 @@ function DetailAlbum({ albumID = null, onClose }) {
           <div className="w-12 h-12 bg-gray-300 rounded-full animate-pulse" />
         )}
 
-        {/* Danh sách ảng */}
+        {/* Danh sách ảnh */}
         <div className="mt-4 grid grid-cols-4 gap-4 max-h-[400px] overflow-y-auto p-2 bg-gray-100">
           {photos.length > 0 ? (
             photos.map((photo) => (
