@@ -1,16 +1,55 @@
-# React + Vite
+# 🚀 GeekUp Test
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Demo: [Xem tại đây](https://geek-up-test.vercel.app/)
 
-Currently, two official plugins are available:
+## 📖 Giới thiệu
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+GeekUp Test là một ứng dụng demo được xây dựng bằng **React**, **Vite** và **Tailwind CSS**, nhằm thực hành và trình bày giao diện web hiện đại.  
+Dự án được triển khai trực tuyến bằng **Vercel**.
 
-## React Compiler
+## 🛠️ Công nghệ sử dụng
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- ⚛️ [React 19](https://react.dev/) – thư viện UI
+- ⚡ [Vite](https://vite.dev/) – bundler siêu nhanh
+- 🎨 [Tailwind CSS](https://tailwindcss.com/) – framework CSS tiện lợi
+- 🛣️ [React Router v7](https://reactrouter.com/) – quản lý điều hướng
+- 🔗 [Lucide React](https://lucide.dev/) – bộ icon hiện đại
 
-## Expanding the ESLint configuration
+## 📂 Cấu trúc dự án
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    ├── public/ # Tài nguyên tĩnh
+    ├── src/ # Source code chính
+    │ ├── components/ # Các component tái sử dụng
+    │ ├── pages/ # Các trang chính
+    │ ├── App.jsx # Component gốc
+    │ └── main.jsx # Điểm khởi chạy
+    ├── index.html
+    ├── package.json
+    └── vite.config.js
+
+## ⚙️ Cài đặt & chạy local
+
+Yêu cầu: **Node.js >= 18**
+
+```bash
+# Clone repo
+git clone https://github.com/Cong-Chau/GeekUpTest
+cd geekuptest
+
+# Cài dependencies
+npm install
+
+# Chạy môi trường phát triển
+npm run dev
+
+# Build production
+npm run build
+
+# Preview build
+npm run preview
+```
+
+# 🚀 GeekUp Test
+
+Dự án được deploy bằng **Vercel**
+Mỗi lần push code lên branch chính, Vercel sẽ tự động build & cập nhật phiên bản mới.
