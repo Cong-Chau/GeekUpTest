@@ -1,13 +1,14 @@
 import SideBar from "./components/layout/SideBar";
 import Albums from "./pages/Albums";
 import Users from "./pages/Users";
-import { Routes, Route, Router } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 function App() {
   return (
     <div className="flex flex-row">
       <SideBar />
       <div className="w-5/6 min-h-screen h-auto">
         <Routes>
+          <Route path="/" element={<Navigate to="/albums" replace />} />
           <Route path="/albums" element={<Albums />} />
           <Route path="/users" element={<Users />} />
         </Routes>
