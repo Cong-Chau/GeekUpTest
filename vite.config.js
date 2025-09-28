@@ -7,5 +7,5 @@ export default defineConfig({
   sẻrver: {
     port: 3000,
   },
-  base: "/albums",
+  base: "/",
 });
