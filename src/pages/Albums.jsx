@@ -171,7 +171,7 @@ function Albums() {
           <button
             disabled={currentPage === totalPages || loading}
             onClick={() => setCurrentPage((prev) => prev + 1)}
-            className={`px-3 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer ${
+            className={`px-3 py-1 rounded-md flex items-center gap-1  ${
               currentPage === totalPages || loading
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed "
                 : "bg-green-200 text-green-800 hover:bg-green-300 hover:cursor-pointer"

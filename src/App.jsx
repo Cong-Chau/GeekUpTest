@@ -1,7 +1,7 @@
 import SideBar from "./components/layout/SideBar";
 import Albums from "./pages/Albums";
 import Users from "./pages/Users";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Router } from "react-router-dom";
 function App() {
   return (
     <div className="flex flex-row">

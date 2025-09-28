@@ -81,7 +81,7 @@ function DetailAlbum({ albumID = null, onClose }) {
                   alt={photo.title}
                   className="w-24 h-24 object-cover rounded"
                 />
-                <p className="text-sm text-center mt-2">{photo.title}</p>
+                <p className="text-sm text-center mt-2 ">{photo.title}</p>
               </div>
             ))
           ) : (
